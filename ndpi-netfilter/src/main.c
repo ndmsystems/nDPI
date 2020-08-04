@@ -719,7 +719,7 @@ static inline void ndpi_ct_counters_add(struct nf_ct_ext_ndpi *ct_ndpi,
 	ct_ndpi->flinfo.time_end = m_time;
 	set_flow_info(ct_ndpi);
 	if(ndpi_log_debug > 1)
-		pr_info("ndpi: ct_ndpi %pK counter pkt %lu bytes %lu\n",ct_ndpi,npkt,len);
+		pr_info("ndpi: ct_ndpi %pK counter pkt %zu bytes %zu\n",ct_ndpi,npkt,len);
 }
 		
 
@@ -2205,7 +2205,7 @@ ssize_t nflow_read(struct ndpi_net *n, char __user *buf,
 				n->flow_l = prev;
 				if(r < 0 && count != 0) {
 					p = -EFAULT;
-					pr_info("%s:%s cond4 p %d count %ld\n",
+					pr_info("%s:%s cond4 p %d count %zu\n",
 						__func__, n->ns_name, p, count);
 				}
 				break;
@@ -2796,20 +2796,7 @@ static int __init ndpi_mt_init(void)
 	set_ndpi_malloc(malloc_wrapper);
 	set_ndpi_free(free_wrapper);
 
-	if(request_module("nf_conntrack") < 0) {
-		pr_err("xt_ndpi: nf_conntrack required!\n");
-		return -EOPNOTSUPP;
-	}
-	if(request_module("ip_tables") < 0) {
-		pr_err("xt_ndpi: ip_tables required!\n");
-		return -EOPNOTSUPP;
-	}
-#ifdef NDPI_DETECTION_SUPPORT_IPV6
-	if(request_module("ip6_tables") < 0) {
-		pr_err("xt_ndpi: ip6_tables required!\n");
-		return -EOPNOTSUPP;
-	}
-#endif
+
 #ifdef NF_CT_CUSTOM
 	ret = nf_ct_extend_custom_register(&ndpi_extend,0x4e445049); /* "NDPI" in hex */
 	if(ret < 0) {
