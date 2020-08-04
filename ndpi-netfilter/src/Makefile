@@ -11,9 +11,9 @@ ifndef $(KERNEL_DIR)
 KERNEL_DIR := /lib/modules/$(shell uname -r)/build
 endif
 
-ifeq ($(shell grep -qc userid $(KERNEL_DIR)/source/include/linux/skbuff.h),1)
-ccflags-y += -DUSE_HACK_USERID=1
-endif
+#ifeq ($(shell grep -qc userid $(KERNEL_DIR)/source/include/linux/skbuff.h),1)
+#ccflags-y += -DUSE_HACK_USERID=1
+#endif
 
 NDPI_PROTO_SRC := $(shell cd $(src) ; echo $(NDPI_PRO)/*.c)
 
